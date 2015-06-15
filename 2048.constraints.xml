@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="http://www.cad.polito.it/ugp3/transforms/constraintsScripted.xslt"?>
+<constraints
+    xmlns="http://www.cad.polito.it/ugp3/schemas/constraints" 
+    id="One-Max" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    schemaLocation="http://www.cad.polito.it/ugp3/schemas/constraints http://www.cad.polito.it/ugp3/schemas/constraints.xsd">
+  <typeDefinitions>
+    <item type="constant" name="action">
+      <value>Action.RIGHT</value>
+      <value>Action.LEFT</value>
+      <value>Action.UP</value>
+      <value>Action.DOWN</value>
+    </item>
+  </typeDefinitions>
+  <commentFormat><value/></commentFormat>
+  <identifierFormat>n<value /></identifierFormat>
+  <labelFormat><value/>: </labelFormat>
+  <uniqueTagFormat><value /></uniqueTagFormat>
+  <prologue id="globalPrologue"/>
+  <epilogue id="globalEpilogue"/>
+  <sections>
+    <section id="bitString" prologueEpilogueCompulsory="false">
+      <prologue id="sectionPrologue">
+	<expression>
+	import java.time.Duration;
+	import java.util.List;
+	import java.util.Random;
+	import put.game2048.*;
+
+	public class MyAgent implements Agent {
+   		public Random random = new Random(123);
+
+    		// A nonparametric constructor is required
+
+    		/** timeLimit will always be 1 ms */
+    		public Action chooseAction(Board board, List possibleActions, Duration timeLimit) {
+        		// Prefer right direction
+        		
+        		
+	</expression>
+      </prologue>
+      <epilogue id="sectionEpilogue">
+	<expression>
+	else {
+            	// If cannot go right, then make a random move
+            			return possibleActions.get(random.nextInt(possibleActions.size()));
+        		}
+    		}
+	}
+	</expression>
+      </epilogue>
+      <subSections>
+	<subSection id="main" maxOccurs="1" minOccurs="1" maxReferences="0">
+	  <prologue id="stringPrologue"/>
+	  <epilogue id="stringEpilogue"/>
+	  
+	  <macros maxOccurs="1500" minOccurs="1" averageOccurs="70" sigma="60">
+	    <macro id="simpleIfAction">
+	      <expression>		
+		if (possibleActions.contains(<param ref="act"/>) {
+            			return <param ref="act"/>;
+		}
+	      </expression>
+	      
+	      <parameters>
+		<item type="definedType" ref="action" name="act" />		
+	      </parameters>
+	    </macro>	    
+	  </macros>
+	</subSection>
+      </subSections>   
+    </section>
+  </sections>
+</constraints>
