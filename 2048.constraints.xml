@@ -29,7 +29,8 @@
         <value>512</value>
         <value>1024</value>
         <value>2048</value>
-        <value>8192</value>
+        <value>4096</value>
+	<value>8192</value>
         <value>16384</value>
         <value>32768</value>
         <value>65536</value>
@@ -67,7 +68,7 @@
 	</expression>
       </prologue>
       <epilogue id="sectionEpilogue">
-	<expression>
+	<ram ref="op_comp"/>expression>
 				default:
 					return possibleActions.get(random.nextInt(possibleActions.size()));
 					
