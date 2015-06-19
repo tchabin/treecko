@@ -16,6 +16,28 @@
       <value>&lt;</value>
       <value>&gt;</value>
     </item>
+    <item type="constant" name="tile">
+	<value>0</value>
+        <value>2</value>
+        <value>4</value>
+        <value>8</value>
+        <value>16</value>
+        <value>32</value>
+        <value>64</value>
+        <value>128</value>
+        <value>256</value>
+        <value>512</value>
+        <value>1024</value>
+        <value>2048</value>
+        <value>8192</value>
+        <value>16384</value>
+        <value>32768</value>
+        <value>65536</value>
+    </item>
+    <item type="constant" name="AndOr">
+	<value>||</value>
+	<value>&amp;&amp;</value>
+    </item>
   </typeDefinitions>
   <commentFormat><value/></commentFormat>
   <identifierFormat>n<value /></identifierFormat>
@@ -61,30 +83,69 @@
 	  <prologue id="stringPrologue"/>
 	  <epilogue id="stringEpilogue"/>
 	  
-	  <macros maxOccurs="1500" minOccurs="1" averageOccurs="70" sigma="60">
+	  <macros maxOccurs="500" minOccurs="500" averageOccurs="500" sigma="60">
 	    <macro id="simpleIfAction">
 	      <expression>
 					case <param ref="case_nb"/>:		
 						if (board.board[<param ref="idx_x1"/>][<param ref="idx_y1"/>] <param ref="op_comp"/> board.board[<param ref="idx_x2"/>][<param ref="idx_y2"/>] &amp; possibleActions.contains(<param ref="act"/>) {
             						return <param ref="act"/>;
-						}else
-						{
-							goto_switch=<param ref="num_goto"/>;
-							break;
 						}
 	      </expression>
 	      
 	      <parameters>
 		<item type="definedType" ref="action" name="act" />		
-	      	<item type="integer"  minimum=1 maximum=150 name="case_nb"/>
-		<item type="integer"  minimum=1 maximum=150 name="num_goto"/>
+	      	<item type="integer"  minimum=1 maximum=500 name="case_nb"/>
 		<item type="integer" minimum=0 maximum=3 name="idx_x1"/>
 		<item type="integer" minimum=0 maximum=3 name="idx_y1"/>
 		<item type="integer" minimum=0 maximum=3 name="idx_x2"/>
 		<item type="integer" minimum=0 maximum=3 name="idx_y2"/>
 		<item type="definedType" ref="operator" name="op_comp"/>
 	      </parameters>
-	    </macro>	    
+	    </macro>
+
+	    <macro id="gotoAction">
+              <expression>
+                                        case <param ref="case_nb"/>:
+                                                if (board.board[<param ref="idx_x1"/>][<param ref="idx_y1"/>] <param ref="op_comp"/> board.board[<param ref="idx_x2"/>][<param ref="idx_y2"/>] ) {
+                                                        goto_switch=<param ref="num_goto"/>;
+                                                        break;
+                                                }
+              </expression>
+
+              <parameters>
+                <item type="integer"  minimum=1 maximum=500 name="case_nb"/>
+                <item type="integer"  minimum=1 maximum=500 name="num_goto"/>
+                <item type="integer" minimum=0 maximum=3 name="idx_x1"/>
+                <item type="integer" minimum=0 maximum=3 name="idx_y1"/>
+                <item type="integer" minimum=0 maximum=3 name="idx_x2"/>
+                <item type="integer" minimum=0 maximum=3 name="idx_y2"/>
+                <item type="definedType" ref="operator" name="op_comp"/>
+              </parameters>
+            </macro>
+
+
+	   <macro id="doubleIfAction">
+              <expression>
+                                        case <param ref="case_nb"/>:
+                                                if (board.board[<param ref="idx_x1"/>][<param ref="idx_y1"/>] == <param ref="nb_tile1"/> <param ref="AndOr1"/> board.board[<param ref="idx_x2"/>][<param ref="idx_y2"/>] == <param ref="nb_tile2"/> ) {
+                                                        goto_switch=<param ref="num_goto"/>;
+                                                        break;
+                                                }
+              </expression>
+
+              <parameters>
+	        <item type="definedType" ref="tile" name="nb_tile1"/>
+	        <item type="definedType" ref="tile" name="nb_tile2"/>
+		<item type="definedType" ref="AndOr" name="AndOr1"/>
+                <item type="integer"  minimum=1 maximum=500 name="case_nb"/>
+                <item type="integer"  minimum=1 maximum=500 name="num_goto"/>
+                <item type="integer" minimum=0 maximum=3 name="idx_x1"/>
+                <item type="integer" minimum=0 maximum=3 name="idx_y1"/>
+                <item type="integer" minimum=0 maximum=3 name="idx_x2"/>
+                <item type="integer" minimum=0 maximum=3 name="idx_y2"/>
+              </parameters>
+            </macro>
+ 
 	  </macros>
 	</subSection>
       </subSections>   
