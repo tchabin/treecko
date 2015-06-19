@@ -11,6 +11,11 @@
       <value>Action.UP</value>
       <value>Action.DOWN</value>
     </item>
+    <item type="constant" name="operator">
+      <value>==</value>
+      <value>&lt;</value>
+      <value>&gt;</value>
+    </item>
   </typeDefinitions>
   <commentFormat><value/></commentFormat>
   <identifierFormat>n<value /></identifierFormat>
@@ -34,17 +39,19 @@
 
     		/** timeLimit will always be 1 ms */
     		public Action chooseAction(Board board, List possibleActions, Duration timeLimit) {
-        		// Prefer right direction
-        		
-        		
+        		int goto_switch = 1;
+        		for(int instr=1;instr &lt; 10000;++i){
+        			switch(goto_switch){			
 	</expression>
       </prologue>
       <epilogue id="sectionEpilogue">
 	<expression>
-	else {
-            	// If cannot go right, then make a random move
-            			return possibleActions.get(random.nextInt(possibleActions.size()));
-        		}
+				default:
+					return possibleActions.get(random.nextInt(possibleActions.size()));
+					
+				}
+			}
+            		return possibleActions.get(random.nextInt(possibleActions.size()));
     		}
 	}
 	</expression>
@@ -56,14 +63,26 @@
 	  
 	  <macros maxOccurs="1500" minOccurs="1" averageOccurs="70" sigma="60">
 	    <macro id="simpleIfAction">
-	      <expression>		
-		if (possibleActions.contains(<param ref="act"/>) {
-            			return <param ref="act"/>;
-		}
+	      <expression>
+					case <param ref="case_nb"/>:		
+						if (board.board[<param ref="idx_x1"/>][<param ref="idx_y1"/>] <param ref="op_comp"/> board.board[<param ref="idx_x2"/>][<param ref="idx_y2"/>] &amp; possibleActions.contains(<param ref="act"/>) {
+            						return <param ref="act"/>;
+						}else
+						{
+							goto_switch=<param ref="num_goto"/>;
+							break;
+						}
 	      </expression>
 	      
 	      <parameters>
 		<item type="definedType" ref="action" name="act" />		
+	      	<item type="integer"  minimum=1 maximum=150 name="case_nb"/>
+		<item type="integer"  minimum=1 maximum=150 name="num_goto"/>
+		<item type="integer" minimum=0 maximum=3 name="idx_x1"/>
+		<item type="integer" minimum=0 maximum=3 name="idx_y1"/>
+		<item type="integer" minimum=0 maximum=3 name="idx_x2"/>
+		<item type="integer" minimum=0 maximum=3 name="idx_y2"/>
+		<item type="definedType" ref="operator" name="op_comp"/>
 	      </parameters>
 	    </macro>	    
 	  </macros>
