@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xwml version="1.0" encoding="utf-8"?>
 <?xml-stylesheet type="text/xsl" href="http://www.cad.polito.it/ugp3/transforms/constraintsScripted.xslt"?>
 <constraints
     xmlns="http://www.cad.polito.it/ugp3/schemas/constraints" 
@@ -61,14 +61,14 @@
     		// A nonparametric constructor is required
 
     		/** timeLimit will always be 1 ms */
-    		public Action chooseAction(Board board, List possibleActions, Duration timeLimit) {
+    		public Action chooseAction(Board board, List&lt;Action&gt; possibleActions, Duration timeLimit) {
         		int goto_switch = 1;
-        		for(int instr=1;instr &lt; 10000;++i){
+        		for(int instr=1;instr &lt; 10000;++instr){
         			switch(goto_switch){			
 	</expression>
       </prologue>
       <epilogue id="sectionEpilogue">
-	<ram ref="op_comp"/>expression>
+	<expression>
 				default:
 					return possibleActions.get(random.nextInt(possibleActions.size()));
 					
@@ -87,8 +87,8 @@
 	  <macros maxOccurs="500" minOccurs="500" averageOccurs="500" sigma="60">
 	    <macro id="simpleIfAction">
 	      <expression>
-					case <param ref="case_nb"/>:		
-						if (board.board[<param ref="idx_x1"/>][<param ref="idx_y1"/>] <param ref="op_comp"/> board.board[<param ref="idx_x2"/>][<param ref="idx_y2"/>] &amp; possibleActions.contains(<param ref="act"/>) {
+					case case_replace:		
+						if (board.get()[<param ref="idx_x1"/>][<param ref="idx_y1"/>] <param ref="op_comp"/> board.get()[<param ref="idx_x2"/>][<param ref="idx_y2"/>] &amp; possibleActions.contains(<param ref="act"/>)) {
             						return <param ref="act"/>;
 						}
 	      </expression>
@@ -106,8 +106,8 @@
 
 	    <macro id="gotoAction">
               <expression>
-                                        case <param ref="case_nb"/>:
-                                                if (board.board[<param ref="idx_x1"/>][<param ref="idx_y1"/>] <param ref="op_comp"/> board.board[<param ref="idx_x2"/>][<param ref="idx_y2"/>] ) {
+                                        case case_replace:
+                                                if (board.get()[<param ref="idx_x1"/>][<param ref="idx_y1"/>] <param ref="op_comp"/> board.get()[<param ref="idx_x2"/>][<param ref="idx_y2"/>] ) {
                                                         goto_switch=<param ref="num_goto"/>;
                                                         break;
                                                 }
@@ -127,8 +127,8 @@
 
 	   <macro id="doubleIfAction">
               <expression>
-                                        case <param ref="case_nb"/>:
-                                                if (board.board[<param ref="idx_x1"/>][<param ref="idx_y1"/>] == <param ref="nb_tile1"/> <param ref="AndOr1"/> board.board[<param ref="idx_x2"/>][<param ref="idx_y2"/>] == <param ref="nb_tile2"/> ) {
+                                        case case_replace:
+                                                if (board.get()[<param ref="idx_x1"/>][<param ref="idx_y1"/>] == <param ref="nb_tile1"/> <param ref="AndOr1"/> board.get()[<param ref="idx_x2"/>][<param ref="idx_y2"/>] == <param ref="nb_tile2"/> ) {
                                                         goto_switch=<param ref="num_goto"/>;
                                                         break;
                                                 }

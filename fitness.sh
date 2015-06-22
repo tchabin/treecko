@@ -30,10 +30,8 @@
 [[ ! "$UGP3_FITNESS_FILE" ]] && UGP3_FITNESS_FILE=fitness.out
 
 
-# Clean up directory
-rm -f tprog error.log $UGP3_FITNESS_FILE
-
 # Compile & execute
+./replace.py  $UGP3_OFFSPRING  MyAgent.java
 javac -cp 2048.jar MyAgent.java
 jar -cf MyAgent.jar MyAgent.class
 
@@ -44,6 +42,10 @@ jar -cf MyAgent.jar MyAgent.class
 #a=${tprog[0]}
 #(( b = 10000 - $len )); [[ $b < 0 ]] && b=0 # (paranoia)
 #note="0x${tprog[1]}/$len"
-
-fit=`java -jar 2048.jar MyAgent.jar MyAgent 10000 1.0 123|sed -n 2p |cut -d , -f 1`
+totfit=`java -jar 2048.jar MyAgent.jar MyAgent 100 1.0 123`
+fit=`echo $totfit|sed -n 2p |cut -d , -f 18`
 echo "$fit" >$UGP3_FITNESS_FILE
+echo $totfit
+
+# Clean up directory
+#rm -f tprog error.log $UGP3_FITNESS_FILE
