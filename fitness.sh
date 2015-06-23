@@ -42,10 +42,10 @@ jar -cf MyAgent.jar MyAgent.class
 #a=${tprog[0]}
 #(( b = 10000 - $len )); [[ $b < 0 ]] && b=0 # (paranoia)
 #note="0x${tprog[1]}/$len"
-totfit=`java -jar 2048.jar MyAgent.jar MyAgent 100 1.0 123`
-fit=`echo $totfit|sed -n 2p |cut -d , -f 18`
+totfit=`java -jar 2048.jar MyAgent.jar MyAgent 10000 1.0 123`
+fit=`echo $totfit|cut -d \  -f2 |cut -d , -f 1`
 echo "$fit" >$UGP3_FITNESS_FILE
-echo $totfit
-
+echo totfit: $totfit
+echo fit: $fit
 # Clean up directory
 #rm -f tprog error.log $UGP3_FITNESS_FILE
