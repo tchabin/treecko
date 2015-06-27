@@ -21,14 +21,6 @@
       <value>ranking</value>
     </item>
 
-  
-    <item type="constant" name="typeResult">
-      <value>false,false,true</value>
-      <value>false,true,false</value>
-      <value>true,false,false</value>
-      <value>true,false,true</value>
-      <value>true,true,false</value>
-    </item>
     <item type="constant" name="operator">
       <value>==</value>
       <value>&lt;</value>
@@ -77,21 +69,6 @@
    		public Random random = new Random(123);
 
     		// A nonparametric constructor is required
-		public int res(boolean bScore,boolean bGoto, boolean bTakeAction){
-			if(!bScore &amp;&amp; !bGoto &amp;&amp; bTakeAction)
-				return 0;
-			else if(!bScore &amp;&amp; bGoto &amp;&amp; !bTakeAction)	
-				return 1;
-			else if(bScore &amp;&amp; !bGoto &amp;&amp; !bTakeAction)	
-				return 2;
-			else if(bScore &amp;&amp; !bGoto &amp;&amp; bTakeAction)	
-				return 3;
-			else if(bScore &amp;&amp; bGoto &amp;&amp; !bTakeAction)	
-				return 4;
-			else
-				return -1;
-								
-		}
 		public Action takeAction(List&lt;Action&gt; possibleActions,int scoreRIGHT,int scoreLEFT,int scoreUP,int scoreDOWN){
 			Action maxAct=possibleActions.get(0);
 			int maxScore=0;		
@@ -234,53 +211,85 @@ return false;
 	  <epilogue id="stringEpilogue"/>
 	  
 <macros maxOccurs="200" minOccurs="200" averageOccurs="200" sigma="60">
-	    <macro id="simpleIfAction">
+	    <macro id="simpleIfGotoGoto">
 	      <expression>
 					case case_replace:		
 						if (<param ref="tcond"/>(<param ref="idx_x1"/>, <param ref="idx_y1"/>,<param ref="idx_x2"/>, <param ref="idx_y2"/>, board ,<param ref="valTile"/> )) {
-            						res_ret=res(<param ref="tRes"/>);
-							if(res_ret==2 ||res_ret==3||res_ret==4){
-								scoreUP+=<param ref="sUP"/>;
-								scoreDOWN+=<param ref="sDOWN"/>;
-								scoreRIGHT+=<param ref="sRIGHT"/>;
-								scoreLEFT+=<param ref="sLEFT"/>;
-							}
-							if(res_ret==1||res_ret==4){
-								goto_switch=<param ref="nGOTO"/>;
-							}	
-							if(res_ret==0 || res_ret==3){								
-								return takeAction(possibleActions,scoreUP,scoreDOWN,scoreRIGHT,scoreLEFT);
-							}				
+							goto_switch=<param ref="nGOTO"/>;
 						}else{
-							res_ret=res(<param ref="tRes2"/>);
-							if(res_ret==2 ||res_ret==3||res_ret==4){
-								scoreUP+=<param ref="sUP2"/>;
-								scoreDOWN+=<param ref="sDOWN2"/>;
-								scoreRIGHT+=<param ref="sRIGHT2"/>;
-								scoreLEFT+=<param ref="sLEFT2"/>;
-							}
-							if(res_ret==1||res_ret==4){
-								goto_switch=<param ref="nGOTO2"/>;
-							}	
-							if(res_ret==0 || res_ret==3){	
-								return takeAction(possibleActions,scoreUP,scoreDOWN,scoreRIGHT,scoreLEFT);
-							}		
+							goto_switch=<param ref="nGOTO2"/>;	
 						}
 	      </expression>
 	   
 	      <parameters>		
 	      	<item type="integer"  minimum="1" maximum="200" name="nGOTO"/>
-		<item type="definedType" ref="typeResult" name="tRes"/>
-		<item type="integer" minimum="0" maximum="5" name="sUP"/>
-		<item type="integer" minimum="0" maximum="5" name="sDOWN"/>
-		<item type="integer" minimum="0" maximum="5" name="sRIGHT"/>
-		<item type="integer" minimum="0" maximum="5" name="sLEFT"/>
 	      	<item type="integer"  minimum="1" maximum="200" name="nGOTO2"/>
-		<item type="definedType" ref="typeResult" name="tRes2"/>
-		<item type="integer" minimum="0" maximum="5" name="sUP2"/>
-		<item type="integer" minimum="0" maximum="5" name="sDOWN2"/>
-		<item type="integer" minimum="0" maximum="5" name="sRIGHT2"/>
-		<item type="integer" minimum="0" maximum="5" name="sLEFT2"/>
+		<item type="definedType" ref="tile" name="valTile"/>
+		<item type="integer" minimum="0" maximum="3" name="idx_x1"/>
+		<item type="integer" minimum="0" maximum="3" name="idx_y1"/>
+		<item type="integer" minimum="0" maximum="3" name="idx_x2"/>
+		<item type="integer" minimum="0" maximum="3" name="idx_y2"/>
+		<item type="definedType" ref="typeCondition" name="tcond"/>
+	      </parameters>
+	    </macro>
+		
+		<macro id="simpleIfGotoAction">
+	      <expression>
+					case case_replace:		
+						if (<param ref="tcond"/>(<param ref="idx_x1"/>, <param ref="idx_y1"/>,<param ref="idx_x2"/>, <param ref="idx_y2"/>, board ,<param ref="valTile"/> )) {
+            				goto_switch=<param ref="nGOTO"/>;		
+						}else{
+							return <param ref="tAct" />;
+						}
+	      </expression>
+	   
+	      <parameters>		
+	      	<item type="integer"  minimum="1" maximum="200" name="nGOTO"/>
+		<item type = "definedType" ref="action" name="tAct" />
+		<item type="definedType" ref="tile" name="valTile"/>
+		<item type="integer" minimum="0" maximum="3" name="idx_x1"/>
+		<item type="integer" minimum="0" maximum="3" name="idx_y1"/>
+		<item type="integer" minimum="0" maximum="3" name="idx_x2"/>
+		<item type="integer" minimum="0" maximum="3" name="idx_y2"/>
+		<item type="definedType" ref="typeCondition" name="tcond"/>
+	      </parameters>
+	    </macro>
+		
+		<macro id="simpleIfActionGoto">
+	      <expression>
+					case case_replace:		
+						if (<param ref="tcond"/>(<param ref="idx_x1"/>, <param ref="idx_y1"/>,<param ref="idx_x2"/>, <param ref="idx_y2"/>, board ,<param ref="valTile"/> )) {
+            				return <param ref="tAct" />;
+						}else{
+							goto_switch=<param ref="nGOTO"/>;		
+						}
+	      </expression>
+	   
+	      <parameters>		
+	      	<item type="integer"  minimum="1" maximum="200" name="nGOTO"/>
+		<item type = "definedType" ref="action" name="tAct" />
+		<item type="definedType" ref="tile" name="valTile"/>
+		<item type="integer" minimum="0" maximum="3" name="idx_x1"/>
+		<item type="integer" minimum="0" maximum="3" name="idx_y1"/>
+		<item type="integer" minimum="0" maximum="3" name="idx_x2"/>
+		<item type="integer" minimum="0" maximum="3" name="idx_y2"/>
+		<item type="definedType" ref="typeCondition" name="tcond"/>
+	      </parameters>
+	    </macro>
+		
+		<macro id="simpleIfActionAction">
+	      <expression>
+					case case_replace:		
+						if (<param ref="tcond"/>(<param ref="idx_x1"/>, <param ref="idx_y1"/>,<param ref="idx_x2"/>, <param ref="idx_y2"/>, board ,<param ref="valTile"/> )) {
+            				return <param ref="tAct" />;
+						}else{
+							return <param ref="tAct2" />;	
+						}
+	      </expression>
+	   
+	      <parameters>		
+	    <item type = "definedType" ref="action" name="tAct" />
+		<item type = "definedType" ref="action" name="tAct2" />
 		<item type="definedType" ref="tile" name="valTile"/>
 		<item type="integer" minimum="0" maximum="3" name="idx_x1"/>
 		<item type="integer" minimum="0" maximum="3" name="idx_y1"/>
@@ -290,54 +299,107 @@ return false;
 	      </parameters>
 	    </macro>
 
-
-	<macro id="doubleIfAction">
+	
+	<macro id="doubleIfGotoGoto">
 	      <expression>
 					case case_replace:		
 						if (<param ref="tcond"/>(<param ref="idx_x1"/>, <param ref="idx_y1"/>,<param ref="idx_x2"/>, <param ref="idx_y2"/>, board ,<param ref="valTile"/>) <param ref="op"/> <param ref="tcond2"/>(<param ref="idx_x1_2"/>, <param ref="idx_y1_2"/>,<param ref="idx_x2_2"/>, <param ref="idx_y2_2"/>, board ,<param ref="valTile_2"/>) ){
-            						res_ret=res(<param ref="tRes"/>);
-							if(res_ret==2 ||res_ret==3||res_ret==4){
-								scoreUP+=<param ref="sUP"/>;
-								scoreDOWN+=<param ref="sDOWN"/>;
-								scoreRIGHT+=<param ref="sRIGHT"/>;
-								scoreLEFT+=<param ref="sLEFT"/>;
-							}
-							if(res_ret==1||res_ret==4){
-								goto_switch=<param ref="nGOTO"/>;
-							}	
-							if(res_ret==0 || res_ret==3){								
-								return takeAction(possibleActions,scoreUP,scoreDOWN,scoreRIGHT,scoreLEFT);
-							}				
+            				goto_switch=<param ref="nGOTO"/>;		
 						}else{
-							res_ret=res(<param ref="tRes2"/>);
-							if(res_ret==2 ||res_ret==3||res_ret==4){
-								scoreUP+=<param ref="sUP2"/>;
-								scoreDOWN+=<param ref="sDOWN2"/>;
-								scoreRIGHT+=<param ref="sRIGHT2"/>;
-								scoreLEFT+=<param ref="sLEFT2"/>;
-							}
-							if(res_ret==1||res_ret==4){
-								goto_switch=<param ref="nGOTO2"/>;
-							}	
-							if(res_ret==0 || res_ret==3){	
-								return takeAction(possibleActions,scoreUP,scoreDOWN,scoreRIGHT,scoreLEFT);
-							}		
+							goto_switch=<param ref="nGOTO2"/>;	
 						}
 	      </expression>
 	   
 	      <parameters>		
 	      	<item type="integer"  minimum="1" maximum="200" name="nGOTO"/>
-		<item type="definedType" ref="typeResult" name="tRes"/>
-		<item type="integer" minimum="0" maximum="5" name="sUP"/>
-		<item type="integer" minimum="0" maximum="5" name="sDOWN"/>
-		<item type="integer" minimum="0" maximum="5" name="sRIGHT"/>
-		<item type="integer" minimum="0" maximum="5" name="sLEFT"/>
 	      	<item type="integer"  minimum="1" maximum="200" name="nGOTO2"/>
-		<item type="definedType" ref="typeResult" name="tRes2"/>
-		<item type="integer" minimum="0" maximum="5" name="sUP2"/>
-		<item type="integer" minimum="0" maximum="5" name="sDOWN2"/>
-		<item type="integer" minimum="0" maximum="5" name="sRIGHT2"/>
-		<item type="integer" minimum="0" maximum="5" name="sLEFT2"/>
+		<item type="definedType" ref="tile" name="valTile"/>
+		<item type="integer" minimum="0" maximum="3" name="idx_x1"/>
+		<item type="integer" minimum="0" maximum="3" name="idx_y1"/>
+		<item type="integer" minimum="0" maximum="3" name="idx_x2"/>
+		<item type="integer" minimum="0" maximum="3" name="idx_y2"/>
+		<item type="definedType" ref="typeCondition" name="tcond"/>
+		<item type="definedType" ref="tile" name="valTile_2"/>
+		<item type="integer" minimum="0" maximum="3" name="idx_x1_2"/>
+		<item type="integer" minimum="0" maximum="3" name="idx_y1_2"/>
+		<item type="integer" minimum="0" maximum="3" name="idx_x2_2"/>
+		<item type="integer" minimum="0" maximum="3" name="idx_y2_2"/>
+		<item type="definedType" ref="typeCondition" name="tcond2"/>
+		<item type="definedType" ref="AndOr" name="op"/>
+	      </parameters>
+	    </macro>
+	
+	<macro id="doubleIfGotoAction">
+	      <expression>
+					case case_replace:		
+						if (<param ref="tcond"/>(<param ref="idx_x1"/>, <param ref="idx_y1"/>,<param ref="idx_x2"/>, <param ref="idx_y2"/>, board ,<param ref="valTile"/>) <param ref="op"/> <param ref="tcond2"/>(<param ref="idx_x1_2"/>, <param ref="idx_y1_2"/>,<param ref="idx_x2_2"/>, <param ref="idx_y2_2"/>, board ,<param ref="valTile_2"/>) ){
+            				goto_switch=<param ref="nGOTO"/>;		
+						}else{
+							return <param ref="tAct" />;
+						}
+	      </expression>
+	   
+	      <parameters>		
+	      	<item type="integer"  minimum="1" maximum="200" name="nGOTO"/>
+	      	<item type = "definedType" ref="action" name="tAct" />
+		<item type="definedType" ref="tile" name="valTile"/>
+		<item type="integer" minimum="0" maximum="3" name="idx_x1"/>
+		<item type="integer" minimum="0" maximum="3" name="idx_y1"/>
+		<item type="integer" minimum="0" maximum="3" name="idx_x2"/>
+		<item type="integer" minimum="0" maximum="3" name="idx_y2"/>
+		<item type="definedType" ref="typeCondition" name="tcond"/>
+		<item type="definedType" ref="tile" name="valTile_2"/>
+		<item type="integer" minimum="0" maximum="3" name="idx_x1_2"/>
+		<item type="integer" minimum="0" maximum="3" name="idx_y1_2"/>
+		<item type="integer" minimum="0" maximum="3" name="idx_x2_2"/>
+		<item type="integer" minimum="0" maximum="3" name="idx_y2_2"/>
+		<item type="definedType" ref="typeCondition" name="tcond2"/>
+		<item type="definedType" ref="AndOr" name="op"/>
+	      </parameters>
+	    </macro>
+	
+	<macro id="doubleIfActionGoto">
+	      <expression>
+					case case_replace:		
+						if (<param ref="tcond"/>(<param ref="idx_x1"/>, <param ref="idx_y1"/>,<param ref="idx_x2"/>, <param ref="idx_y2"/>, board ,<param ref="valTile"/>) <param ref="op"/> <param ref="tcond2"/>(<param ref="idx_x1_2"/>, <param ref="idx_y1_2"/>,<param ref="idx_x2_2"/>, <param ref="idx_y2_2"/>, board ,<param ref="valTile_2"/>) ){
+            				return <param ref="tAct" />;	
+						}else{
+							goto_switch=<param ref="nGOTO"/>;	
+						}
+	      </expression>
+	   
+	      <parameters>		
+	      	<item type="integer"  minimum="1" maximum="200" name="nGOTO"/>
+	      	<item type = "definedType" ref="action" name="tAct" />
+		<item type="definedType" ref="tile" name="valTile"/>
+		<item type="integer" minimum="0" maximum="3" name="idx_x1"/>
+		<item type="integer" minimum="0" maximum="3" name="idx_y1"/>
+		<item type="integer" minimum="0" maximum="3" name="idx_x2"/>
+		<item type="integer" minimum="0" maximum="3" name="idx_y2"/>
+		<item type="definedType" ref="typeCondition" name="tcond"/>
+		<item type="definedType" ref="tile" name="valTile_2"/>
+		<item type="integer" minimum="0" maximum="3" name="idx_x1_2"/>
+		<item type="integer" minimum="0" maximum="3" name="idx_y1_2"/>
+		<item type="integer" minimum="0" maximum="3" name="idx_x2_2"/>
+		<item type="integer" minimum="0" maximum="3" name="idx_y2_2"/>
+		<item type="definedType" ref="typeCondition" name="tcond2"/>
+		<item type="definedType" ref="AndOr" name="op"/>
+	      </parameters>
+	    </macro>
+	
+	<macro id="doubleIfActionAction">
+	      <expression>
+					case case_replace:		
+						if (<param ref="tcond"/>(<param ref="idx_x1"/>, <param ref="idx_y1"/>,<param ref="idx_x2"/>, <param ref="idx_y2"/>, board ,<param ref="valTile"/>) <param ref="op"/> <param ref="tcond2"/>(<param ref="idx_x1_2"/>, <param ref="idx_y1_2"/>,<param ref="idx_x2_2"/>, <param ref="idx_y2_2"/>, board ,<param ref="valTile_2"/>) ){
+            				return <param ref="tAct" />;	
+						}else{
+							return <param ref="tAct2" />;
+						}
+	      </expression>
+	   
+	      <parameters>		
+	      	<item type = "definedType" ref="action" name="tAct" />
+	      	<item type = "definedType" ref="action" name="tAct2" />
 		<item type="definedType" ref="tile" name="valTile"/>
 		<item type="integer" minimum="0" maximum="3" name="idx_x1"/>
 		<item type="integer" minimum="0" maximum="3" name="idx_y1"/>
