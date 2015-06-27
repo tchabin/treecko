@@ -69,27 +69,28 @@
    		public Random random = new Random(123);
 
     		// A nonparametric constructor is required
-		public Action takeAction(List&lt;Action&gt; possibleActions,int scoreRIGHT,int scoreLEFT,int scoreUP,int scoreDOWN){
-			Action maxAct=possibleActions.get(0);
-			int maxScore=0;		
-			for(int i=0;i&lt;possibleActions.size();++i){
-				int score_i=0;
-				if(possibleActions.get(i)==Action.RIGHT)
-					score_i=scoreRIGHT;
-				else if(possibleActions.get(i)==Action.LEFT)
-					score_i=scoreLEFT;
-				else if(possibleActions.get(i)==Action.UP)
-					score_i=scoreUP;
-				else
-					score_i=scoreDOWN;
-
-				if(score_i>maxScore){
-					maxAct=possibleActions.get(i);
-					maxScore=score_i;
-				}												
+		
+		public Action act(List&lt;Action&gt; possibleActions, Action act1, Action act2, Action act3)
+		{
+			boolean act2_is_possible = false;
+			boolean act3_is_possible = false;
+			for(int i=0; i$lt;possibleActions.size(); ++i){
+				if(possibleActions.get(i) == act1){
+					return act1;
+				}else if(possibleActions.get(i) == act2){
+					act2_is_possible = true;
+				}else if(possibleActions.get(i) == act3){
+					act3_is_possible = true;
+				}
 			}
-			return maxAct;
+			
+			if(act2_is_possible)
+				return act2;
+			if(act3_is_possible)
+				return act3;
+			return possibleActions.get(random.nextInt(possibleActions.size()));
 		}
+		
     		public int HighestValue(Board board){
 			int valmax=0;
 			for(int i = 0;i&lt;4;++i){
@@ -183,11 +184,6 @@ return false;
 		/** timeLimit will always be 1 ms */
     		public Action chooseAction(Board board, List&lt;Action&gt; possibleActions, Duration timeLimit) {
         		int goto_switch = 1;
-        		int scoreUP = 0;
-			int scoreDOWN=0;
-			int scoreRIGHT=0;
-			int scoreLEFT=0;
-			int res_ret=-1;
 			int valmax=HighestValue(board);
 			for(int instr=1;instr &lt; 10000;++instr){
         			switch(goto_switch){			
@@ -239,13 +235,15 @@ return false;
 						if (<param ref="tcond"/>(<param ref="idx_x1"/>, <param ref="idx_y1"/>,<param ref="idx_x2"/>, <param ref="idx_y2"/>, board ,<param ref="valTile"/> )) {
             				goto_switch=<param ref="nGOTO"/>;		
 						}else{
-							return <param ref="tAct" />;
+							return act(possibleActions, <param ref="tAct" />, <param ref="tAct2" />, <param ref="tAct3" />);
 						}
 	      </expression>
 	   
 	      <parameters>		
 	      	<item type="integer"  minimum="1" maximum="200" name="nGOTO"/>
 		<item type = "definedType" ref="action" name="tAct" />
+		<item type = "definedType" ref="action" name="tAct2" />
+		<item type = "definedType" ref="action" name="tAct3" />
 		<item type="definedType" ref="tile" name="valTile"/>
 		<item type="integer" minimum="0" maximum="3" name="idx_x1"/>
 		<item type="integer" minimum="0" maximum="3" name="idx_y1"/>
@@ -259,7 +257,7 @@ return false;
 	      <expression>
 					case case_replace:		
 						if (<param ref="tcond"/>(<param ref="idx_x1"/>, <param ref="idx_y1"/>,<param ref="idx_x2"/>, <param ref="idx_y2"/>, board ,<param ref="valTile"/> )) {
-            				return <param ref="tAct" />;
+            				return act(possibleActions, <param ref="tAct" />, <param ref="tAct2" />, <param ref="tAct3" />);
 						}else{
 							goto_switch=<param ref="nGOTO"/>;		
 						}
@@ -268,6 +266,8 @@ return false;
 	      <parameters>		
 	      	<item type="integer"  minimum="1" maximum="200" name="nGOTO"/>
 		<item type = "definedType" ref="action" name="tAct" />
+		<item type = "definedType" ref="action" name="tAct2" />
+		<item type = "definedType" ref="action" name="tAct3" />
 		<item type="definedType" ref="tile" name="valTile"/>
 		<item type="integer" minimum="0" maximum="3" name="idx_x1"/>
 		<item type="integer" minimum="0" maximum="3" name="idx_y1"/>
@@ -281,15 +281,19 @@ return false;
 	      <expression>
 					case case_replace:		
 						if (<param ref="tcond"/>(<param ref="idx_x1"/>, <param ref="idx_y1"/>,<param ref="idx_x2"/>, <param ref="idx_y2"/>, board ,<param ref="valTile"/> )) {
-            				return <param ref="tAct" />;
+            				return act(possibleActions, <param ref="tAct" />, <param ref="tAct2" />, <param ref="tAct3" />);
 						}else{
-							return <param ref="tAct2" />;	
+							return act(possibleActions, <param ref="tAct_2" />, <param ref="tAct2_2" />, <param ref="tAct3_2" />);	
 						}
 	      </expression>
 	   
 	      <parameters>		
 	    <item type = "definedType" ref="action" name="tAct" />
 		<item type = "definedType" ref="action" name="tAct2" />
+		<item type = "definedType" ref="action" name="tAct3" />
+		<item type = "definedType" ref="action" name="tAct_2" />
+		<item type = "definedType" ref="action" name="tAct2_2" />
+		<item type = "definedType" ref="action" name="tAct3_2" />
 		<item type="definedType" ref="tile" name="valTile"/>
 		<item type="integer" minimum="0" maximum="3" name="idx_x1"/>
 		<item type="integer" minimum="0" maximum="3" name="idx_y1"/>
@@ -335,13 +339,15 @@ return false;
 						if (<param ref="tcond"/>(<param ref="idx_x1"/>, <param ref="idx_y1"/>,<param ref="idx_x2"/>, <param ref="idx_y2"/>, board ,<param ref="valTile"/>) <param ref="op"/> <param ref="tcond2"/>(<param ref="idx_x1_2"/>, <param ref="idx_y1_2"/>,<param ref="idx_x2_2"/>, <param ref="idx_y2_2"/>, board ,<param ref="valTile_2"/>) ){
             				goto_switch=<param ref="nGOTO"/>;		
 						}else{
-							return <param ref="tAct" />;
+							return act(possibleActions, <param ref="tAct" />, <param ref="tAct2" />, <param ref="tAct3" />);
 						}
 	      </expression>
 	   
 	      <parameters>		
 	      	<item type="integer"  minimum="1" maximum="200" name="nGOTO"/>
-	      	<item type = "definedType" ref="action" name="tAct" />
+	      <item type = "definedType" ref="action" name="tAct" />
+		<item type = "definedType" ref="action" name="tAct2" />
+		<item type = "definedType" ref="action" name="tAct3" />
 		<item type="definedType" ref="tile" name="valTile"/>
 		<item type="integer" minimum="0" maximum="3" name="idx_x1"/>
 		<item type="integer" minimum="0" maximum="3" name="idx_y1"/>
@@ -362,7 +368,7 @@ return false;
 	      <expression>
 					case case_replace:		
 						if (<param ref="tcond"/>(<param ref="idx_x1"/>, <param ref="idx_y1"/>,<param ref="idx_x2"/>, <param ref="idx_y2"/>, board ,<param ref="valTile"/>) <param ref="op"/> <param ref="tcond2"/>(<param ref="idx_x1_2"/>, <param ref="idx_y1_2"/>,<param ref="idx_x2_2"/>, <param ref="idx_y2_2"/>, board ,<param ref="valTile_2"/>) ){
-            				return <param ref="tAct" />;	
+            				return act(possibleActions, <param ref="tAct" />, <param ref="tAct2" />, <param ref="tAct3" />);
 						}else{
 							goto_switch=<param ref="nGOTO"/>;	
 						}
@@ -370,7 +376,9 @@ return false;
 	   
 	      <parameters>		
 	      	<item type="integer"  minimum="1" maximum="200" name="nGOTO"/>
-	      	<item type = "definedType" ref="action" name="tAct" />
+	    <item type = "definedType" ref="action" name="tAct" />
+		<item type = "definedType" ref="action" name="tAct2" />
+		<item type = "definedType" ref="action" name="tAct3" />
 		<item type="definedType" ref="tile" name="valTile"/>
 		<item type="integer" minimum="0" maximum="3" name="idx_x1"/>
 		<item type="integer" minimum="0" maximum="3" name="idx_y1"/>
@@ -391,15 +399,19 @@ return false;
 	      <expression>
 					case case_replace:		
 						if (<param ref="tcond"/>(<param ref="idx_x1"/>, <param ref="idx_y1"/>,<param ref="idx_x2"/>, <param ref="idx_y2"/>, board ,<param ref="valTile"/>) <param ref="op"/> <param ref="tcond2"/>(<param ref="idx_x1_2"/>, <param ref="idx_y1_2"/>,<param ref="idx_x2_2"/>, <param ref="idx_y2_2"/>, board ,<param ref="valTile_2"/>) ){
-            				return <param ref="tAct" />;	
+            				return act(possibleActions, <param ref="tAct" />, <param ref="tAct2" />, <param ref="tAct3" />);	
 						}else{
-							return <param ref="tAct2" />;
+							return act(possibleActions, <param ref="tAct_2" />, <param ref="tAct2_2" />, <param ref="tAct3_2" />);
 						}
 	      </expression>
 	   
 	      <parameters>		
-	      	<item type = "definedType" ref="action" name="tAct" />
-	      	<item type = "definedType" ref="action" name="tAct2" />
+	    <item type = "definedType" ref="action" name="tAct" />
+		<item type = "definedType" ref="action" name="tAct2" />
+		<item type = "definedType" ref="action" name="tAct3" />
+		<item type = "definedType" ref="action" name="tAct_2" />
+		<item type = "definedType" ref="action" name="tAct2_2" />
+		<item type = "definedType" ref="action" name="tAct3_2" />
 		<item type="definedType" ref="tile" name="valTile"/>
 		<item type="integer" minimum="0" maximum="3" name="idx_x1"/>
 		<item type="integer" minimum="0" maximum="3" name="idx_y1"/>
