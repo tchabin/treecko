@@ -79,17 +79,17 @@
     		// A nonparametric constructor is required
 		public int res(boolean bScore,boolean bGoto, boolean bTakeAction){
 			if(!bScore &amp;&amp; !bGoto &amp;&amp; bTakeAction)
-				return 1;
-			else if(!bScore &amp;&amp; bGoto &amp;&amp; !bTakeAction)	
-				return 2;
-			else if(bScore &amp;&amp; !bGoto &amp;&amp; !bTakeAction)	
-				return 4;
-			else if(bScore &amp;&amp; !bGoto &amp;&amp; bTakeAction)	
-				return 5;
-			else if(bScore &amp;&amp; bGoto &amp;&amp; !bTakeAction)	
-				return 6;
-			else
 				return 0;
+			else if(!bScore &amp;&amp; bGoto &amp;&amp; !bTakeAction)	
+				return 1;
+			else if(bScore &amp;&amp; !bGoto &amp;&amp; !bTakeAction)	
+				return 2;
+			else if(bScore &amp;&amp; !bGoto &amp;&amp; bTakeAction)	
+				return 3;
+			else if(bScore &amp;&amp; bGoto &amp;&amp; !bTakeAction)	
+				return 4;
+			else
+				return -1;
 								
 		}
 		public Action takeAction(List&lt;Action&gt; possibleActions,int scoreRIGHT,int scoreLEFT,int scoreUP,int scoreDOWN){
@@ -126,15 +126,15 @@
 
 
 		public boolean isEqual(int x1, int y1, int x2, int y2, Board board, int useless_val){
-			return (board.get()[x1][y1] == board.get()[x2, y2]);
+			return (board.get()[x1][y1] == board.get()[x2][y2]);
 		}
 
 		public boolean isGreaterThan(int x1, int y1, int x2, int y2, Board board, int useless_val){
-			return (board.get()[x1][y1] &gt; board.get()[x2, y2]);
+			return (board.get()[x1][y1] &gt; board.get()[x2][y2]);
 		}
 
 		public boolean isOneLower(int x1, int y1, int x2, int y2, Board board, int useless_val){
-			return ((board.get()[x2][y2]) / 2 == (board.get()[x1, y1]));
+			return ((board.get()[x2][y2]) / 2 == (board.get()[x1][y1]));
 		}
 
 		public boolean positionEqual(int x1, int y1, int useless_val1, int useless_val2, Board board, int val){
@@ -192,8 +192,11 @@
 		public boolean ranking(int x1, int y1, int useless_parameter1, int useless_parameter2, Board board, int val){
 			int max = HighestValue(board);
 			int b = board.get()[x1][y1];
+if(b==0)
+
+return false;
 			int rank = 2;
-			while(max != b){
+			while(max &gt; b){
 				b *= 2;
 				rank *= 2;
 			}
@@ -230,36 +233,36 @@
 	  <prologue id="stringPrologue"/>
 	  <epilogue id="stringEpilogue"/>
 	  
-	  <macros maxOccurs="200" minOccurs="200" averageOccurs="200" sigma="60">
+<macros maxOccurs="200" minOccurs="200" averageOccurs="200" sigma="60">
 	    <macro id="simpleIfAction">
 	      <expression>
 					case case_replace:		
-						if (<param ref="tcond"/>(<param ref="idx_x1"/>, <param ref="idx_y1"/>, <param ref="idx_x2"/>, <param ref="idx_y2"/>, board ,<param ref="valTile"/> )) {
+						if (<param ref="tcond"/>(<param ref="idx_x1"/>, <param ref="idx_y1"/>,<param ref="idx_x2"/>, <param ref="idx_y2"/>, board ,<param ref="valTile"/> )) {
             						res_ret=res(<param ref="tRes"/>);
-							if(res_ret &amp; 4){
+							if(res_ret==2 ||res_ret==3||res_ret==4){
 								scoreUP+=<param ref="sUP"/>;
 								scoreDOWN+=<param ref="sDOWN"/>;
 								scoreRIGHT+=<param ref="sRIGHT"/>;
 								scoreLEFT+=<param ref="sLEFT"/>;
 							}
-							if(res_ret &amp; 2){
+							if(res_ret==1||res_ret==4){
 								goto_switch=<param ref="nGOTO"/>;
 							}	
-							if(res_ret &amp; 1){								
+							if(res_ret==0 || res_ret==3){								
 								return takeAction(possibleActions,scoreUP,scoreDOWN,scoreRIGHT,scoreLEFT);
 							}				
 						}else{
 							res_ret=res(<param ref="tRes2"/>);
-							if(res_ret &amp; 4){
+							if(res_ret==2 ||res_ret==3||res_ret==4){
 								scoreUP+=<param ref="sUP2"/>;
 								scoreDOWN+=<param ref="sDOWN2"/>;
 								scoreRIGHT+=<param ref="sRIGHT2"/>;
 								scoreLEFT+=<param ref="sLEFT2"/>;
 							}
-							if(res_ret &amp; 2){
+							if(res_ret==1||res_ret==4){
 								goto_switch=<param ref="nGOTO2"/>;
 							}	
-							if(res_ret &amp; 1){	
+							if(res_ret==0 || res_ret==3){	
 								return takeAction(possibleActions,scoreUP,scoreDOWN,scoreRIGHT,scoreLEFT);
 							}		
 						}
@@ -287,6 +290,69 @@
 	      </parameters>
 	    </macro>
 
+
+	<macro id="doubleIfAction">
+	      <expression>
+					case case_replace:		
+						if (<param ref="tcond"/>(<param ref="idx_x1"/>, <param ref="idx_y1"/>,<param ref="idx_x2"/>, <param ref="idx_y2"/>, board ,<param ref="valTile"/>) <param ref="op"/> <param ref="tcond2"/>(<param ref="idx_x1_2"/>, <param ref="idx_y1_2"/>,<param ref="idx_x2_2"/>, <param ref="idx_y2_2"/>, board ,<param ref="valTile_2"/>) ){
+            						res_ret=res(<param ref="tRes"/>);
+							if(res_ret==2 ||res_ret==3||res_ret==4){
+								scoreUP+=<param ref="sUP"/>;
+								scoreDOWN+=<param ref="sDOWN"/>;
+								scoreRIGHT+=<param ref="sRIGHT"/>;
+								scoreLEFT+=<param ref="sLEFT"/>;
+							}
+							if(res_ret==1||res_ret==4){
+								goto_switch=<param ref="nGOTO"/>;
+							}	
+							if(res_ret==0 || res_ret==3){								
+								return takeAction(possibleActions,scoreUP,scoreDOWN,scoreRIGHT,scoreLEFT);
+							}				
+						}else{
+							res_ret=res(<param ref="tRes2"/>);
+							if(res_ret==2 ||res_ret==3||res_ret==4){
+								scoreUP+=<param ref="sUP2"/>;
+								scoreDOWN+=<param ref="sDOWN2"/>;
+								scoreRIGHT+=<param ref="sRIGHT2"/>;
+								scoreLEFT+=<param ref="sLEFT2"/>;
+							}
+							if(res_ret==1||res_ret==4){
+								goto_switch=<param ref="nGOTO2"/>;
+							}	
+							if(res_ret==0 || res_ret==3){	
+								return takeAction(possibleActions,scoreUP,scoreDOWN,scoreRIGHT,scoreLEFT);
+							}		
+						}
+	      </expression>
+	   
+	      <parameters>		
+	      	<item type="integer"  minimum="1" maximum="200" name="nGOTO"/>
+		<item type="definedType" ref="typeResult" name="tRes"/>
+		<item type="integer" minimum="0" maximum="5" name="sUP"/>
+		<item type="integer" minimum="0" maximum="5" name="sDOWN"/>
+		<item type="integer" minimum="0" maximum="5" name="sRIGHT"/>
+		<item type="integer" minimum="0" maximum="5" name="sLEFT"/>
+	      	<item type="integer"  minimum="1" maximum="200" name="nGOTO2"/>
+		<item type="definedType" ref="typeResult" name="tRes2"/>
+		<item type="integer" minimum="0" maximum="5" name="sUP2"/>
+		<item type="integer" minimum="0" maximum="5" name="sDOWN2"/>
+		<item type="integer" minimum="0" maximum="5" name="sRIGHT2"/>
+		<item type="integer" minimum="0" maximum="5" name="sLEFT2"/>
+		<item type="definedType" ref="tile" name="valTile"/>
+		<item type="integer" minimum="0" maximum="3" name="idx_x1"/>
+		<item type="integer" minimum="0" maximum="3" name="idx_y1"/>
+		<item type="integer" minimum="0" maximum="3" name="idx_x2"/>
+		<item type="integer" minimum="0" maximum="3" name="idx_y2"/>
+		<item type="definedType" ref="typeCondition" name="tcond"/>
+		<item type="definedType" ref="tile" name="valTile_2"/>
+		<item type="integer" minimum="0" maximum="3" name="idx_x1_2"/>
+		<item type="integer" minimum="0" maximum="3" name="idx_y1_2"/>
+		<item type="integer" minimum="0" maximum="3" name="idx_x2_2"/>
+		<item type="integer" minimum="0" maximum="3" name="idx_y2_2"/>
+		<item type="definedType" ref="typeCondition" name="tcond2"/>
+		<item type="definedType" ref="AndOr" name="op"/>
+	      </parameters>
+	    </macro>
 	   
  
 	  </macros>
