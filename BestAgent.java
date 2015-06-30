@@ -4,7 +4,7 @@
 	import java.util.Random;
 	import put.game2048.*;
 
-	public class MyAgent implements Agent {
+	public class BestAgent implements Agent {
    		public Random random = new Random(123);
 
     		// A nonparametric constructor is required
