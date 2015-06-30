@@ -20,7 +20,7 @@
 ]{geometry}
 
 %opening
-\title{ \vspace{-3cm}Using Linear Genetic Programming\\to Evolve a Controller for the game \emph{2048}}
+\title{ \vspace{-4cm}Using Linear Genetic Programming\\to Evolve a Controller for the game \emph{2048}}
 \author{T. Chabin, M. Elouafi, P. Carvalho, A. Tonda}
 
 \begin{document}
@@ -52,7 +52,7 @@ The approach used in the competition relies upon exploiting $\mu$GP to directly 
 
 \subsection{Genome structure}
 
-In previous applications of $\mu$GP, the presence of \emph{jump}-like structures in the target language (such as \texttt{goto}s in C/C++ and \texttt{jmp} in Assembly) proved to be particularly beneficial to the evolutionary algorithm. In Java, by design, there is no such structure: in order to obtain a similar behavior, the main part of the genome describes a \texttt{for} loop that contains a \texttt{switch...case} statement, with a non-fixed number of \texttt{case}s. The variable that drives the loop is also used in the \texttt{switch}, and its value can be changed by the statements themselves. This rather complex structure factually behaves like a series of \texttt{goto}s, leaving the evolutionary algorithm free to branch over multiple conditions. An example of the generated code is reported on [link].
+In previous applications of $\mu$GP, the presence of \emph{jump}-like structures in the target language (such as \texttt{goto}s in C/C++ and \texttt{jmp} in Assembly) proved to be particularly beneficial to the evolutionary algorithm. In Java, by design, there is no such structure: in order to obtain a similar behavior, the main part of the genome describes a \texttt{for} loop that contains a \texttt{switch...case} statement, with a non-fixed number of \texttt{case}s. The variable that drives the loop is also used in the \texttt{switch}, and its value can be changed by the statements themselves. This rather complex structure factually behaves like a series of \texttt{goto}s, leaving the evolutionary algorithm free to branch over multiple conditions. An example of the generated code is reported on \footnote{\url{https://github.com/tchabin/treecko/blob/master/BestIndividual.java}}.
 
 
 
