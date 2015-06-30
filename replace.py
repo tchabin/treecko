@@ -23,5 +23,4 @@ for ligne in file(str(sys.argv[1]), "r"):
 	
 f.close()
 
-print("done")
 
