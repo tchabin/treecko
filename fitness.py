@@ -31,11 +31,11 @@ os.chdir(individualName + "-dir")
 
 # compile and execute: every line is basically what you would write on the terminal, only inside the os.system() system call
 os.system("./replace.py " + individualName + " MyAgent.java")
-os.system("javac -cp 2048.jar MyAgent.java")
-os.system("jar -cf MyAgent.jar MyAgent.class")
+os.system("/home/chabin/jdk1.8.0_45/bin/javac -cp 2048.jar MyAgent.java")
+os.system("/home/chabin/jdk1.8.0_45/bin/jar -cf MyAgent.jar MyAgent.class")
 
 # subprocess is used to capture the stdout inside a string
-stdOutput = subprocess.Popen("java -jar 2048.jar MyAgent.jar MyAgent 100 1.0 123", stdout = subprocess.PIPE, #stderr = subprocess.STDOUT, 
+stdOutput = subprocess.Popen("/home/chabin/jdk1.8.0_45/bin/java -jar 2048.jar MyAgent.jar MyAgent 2000 1.0 123", stdout = subprocess.PIPE, #stderr = subprocess.STDOUT, 
 shell=True).communicate()[0]
 
 if DEBUG :
@@ -59,7 +59,7 @@ if DEBUG : print "The dictionary is:", fitnessValues
 
 # write the fitness file
 with open(fitnessFileName, "w") as fp :
-	fp.write( str(fitnessValues["MeanScore"]) + " " + str(fitnessValues["AvgActionTime[ms]"]) )
+	fp.write( str(fitnessValues["MeanScore"])  )
 
 # copy the fitness file to the parent directory
 os.system("cp " + fitnessFileName + " ..")

@@ -8,20 +8,20 @@
   <eliteSize value="0"/>
   <!-- end of enhanced population specific parameters -->
   <!-- (optional) the maximum value of the fitness -->
-  <maximumFitness value="1000000"/>
+  <!--<maximumFitness value="1000000"/> -->
   <!-- (optional) if the best fitness value does not change for maximumSteadyStateGenerations generations, the evolutions stops -->
   <maximumSteadyStateGenerations value="50"/>
   <!-- basic population parameters -->
   <!-- the maximum size of the population -->
-  <mu value="50"/>
+  <mu value="80"/>
   <!-- the initial size of the population -->
-  <nu value="50"/>
+  <nu value="80"/>
   <!-- the numbers of genetic operators applied at every step of the evolution -->
-  <lambda value="32"/>
+  <lambda value="64"/>
   <!-- the inertia for the self-adaptating parameters [0,1] -->
   <inertia value="0.9"/>
   <!-- the number of dimensions of the fitness -->
-  <fitnessParameters value="2"/>
+  <fitnessParameters value="1"/>
   <!-- the maximum age of the individuals -->
   <maximumAge value="10"/>
   <!-- the strength of the mutation operators (0,1) -->
@@ -39,9 +39,8 @@
   <!-- evaluator parameters -->
 
   <evaluation>
-    <concurrentEvaluations value="1"/>
     <removeTempFiles value="true"/>
-    <concurrentEvaluations value="4"/> <!-- ou 8, ou 12, ou 16... -->
+    <concurrentEvaluations value="16"/> <!-- ou 8, ou 12, ou 16... -->
     <evaluatorPathName value="python fork.py --output fitness.out --input "/>    
     <evaluatorInputPathName value="i%s.s"/>
     <evaluatorOutputPathName value="fitness.out"/>

@@ -5,7 +5,8 @@ import argparse
 import os
 
 # NOTE "global" variables; modify here to change the behavior of the script
-scriptCommand = "python fitness.py" 	# name of the script, e.g. "python script.py"
+#scriptCommand = "python fitness.py" 	# name of the script, e.g. "python script.py"
+scriptCommand = "python fitness.py"    # name of the script, e.g. "python script.py"
 inputOption = "--input "	# options of the script
 outputOption = "--output "
 otherOptions = "" 
