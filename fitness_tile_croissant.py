@@ -35,7 +35,7 @@ os.system("javac -cp 2048.jar MyAgent.java")
 os.system("jar -cf MyAgent.jar MyAgent.class")
 
 # subprocess is used to capture the stdout inside a string
-stdOutput = subprocess.Popen("java -jar 2048.jar MyAgent.jar MyAgent 100 1.0 123", stdout = subprocess.PIPE, #stderr = subprocess.STDOUT, 
+stdOutput = subprocess.Popen("java -jar 2048.jar MyAgent.jar MyAgent 2000 1.0 123", stdout = subprocess.PIPE, #stderr = subprocess.STDOUT, 
 shell=True).communicate()[0]
 
 if DEBUG :
@@ -57,10 +57,10 @@ if DEBUG : print "The dictionary is:", fitnessValues
 with open(fitnessFileName, "w") as fp :
 	if fitnessValues["AvgActionTime[ms]"] > 0.9 :
 		t=(-float(fitnessValues["AvgActionTime[ms]"])/0.1+10)
-		fp.write( str(fitnessValues["16"]*t) + " " + str(fitnessValues["32"]*t) + " " + str(fitnessValues["64"]*t) + " " + str(fitnessValues["128"]*t) + " " + str(fitnessValues["512"]*t) + " " + str(fitnessValues["1024"]*t)+ " " + str(fitnessValues["2048"]*t)+ " " + str(fitnessValues["4096"]*t)+" " + str(fitnessValues["8912"]*t)+" " + str(fitnessValues["16384"]*t)+" " + str(fitnessValues["32768"]*t)+" " + str(fitnessValues["65536"]*t)+" "+ str(fitnessValues["MeanScore"]*t) )
+		fp.write( str(fitnessValues["16"]*t) + " " + str(fitnessValues["32"]*t) + " " + str(fitnessValues["64"]*t) + " " + str(fitnessValues["128"]*t) + " " + str(fitnessValues["512"]*t) + " " + str(fitnessValues["1024"]*t)+ " " + str(fitnessValues["2048"]*t)+ " " + str(fitnessValues["4096"]*t)+" " + str(fitnessValues["8912"]*t)+" " + str(fitnessValues["16384"]*t)+" " + str(fitnessValues["32768"]*t)+" " + str(fitnessValues["65536"]*t) )
 
 	else :
-		fp.write( str(fitnessValues["16"]) + " " + str(fitnessValues["32"]) + " " + str(fitnessValues["64"]) + " " + str(fitnessValues["128"]) + " " + str(fitnessValues["512"]) + " " + str(fitnessValues["1024"])+ " " + str(fitnessValues["2048"])+ " " + str(fitnessValues["4096"])+" " + str(fitnessValues["8912"])+" " + str(fitnessValues["16384"])+" " + str(fitnessValues["32768"])+" " + str(fitnessValues["65536"])+" "+ str(fitnessValues["MeanScore"]) )
+		fp.write( str(fitnessValues["16"]) + " " + str(fitnessValues["32"]) + " " + str(fitnessValues["64"]) + " " + str(fitnessValues["128"]) + " " + str(fitnessValues["512"]) + " " + str(fitnessValues["1024"])+ " " + str(fitnessValues["2048"])+ " " + str(fitnessValues["4096"])+" " + str(fitnessValues["8912"])+" " + str(fitnessValues["16384"])+" " + str(fitnessValues["32768"])+" " + str(fitnessValues["65536"]) )
 
 # copy the fitness file to the parent directory
 os.system("cp " + fitnessFileName + " ..")
