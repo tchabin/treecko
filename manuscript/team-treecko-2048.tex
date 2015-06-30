@@ -1,12 +1,26 @@
-\documentclass[]{article}
+%\documentclass[]{article}
 
+%\usepackage{graphicx}
+%\usepackage{listings}
+%\usepackage{url}
+
+\documentclass[11pt,twocolumn]{article}
+%
+\usepackage{makeidx}  % allows for indexgeneration
 \usepackage{graphicx}
-\usepackage{listings}
-\usepackage{url}
 
+\usepackage{listings}
+
+
+\usepackage{url}
+\usepackage[utf8]{inputenc}
+\usepackage[
+  pass,% keep layout unchanged 
+   %showframe,% show the layout
+]{geometry}
 
 %opening
-\title{Using Linear Genetic Programming\\to Evolve a Controller for the game \emph{2048}}
+\title{ \vspace{-3cm}Using Linear Genetic Programming\\to Evolve a Controller for the game \emph{2048}}
 \author{T. Chabin, M. Elouafi, P. Carvalho, A. Tonda}
 
 \begin{document}
@@ -14,39 +28,45 @@
 \maketitle
 
 \begin{abstract}
+
 This short paper describes the method used to evolve a controller for the game \emph{2048} for the GECCO 2015 competition. A generic Linear Genetic Programming open-source tool is used to directly write a Java class, that is subsequently corrected, compiled inside the provided framework, and run to obtain a fitness value.
+
+
+
 \end{abstract}
 
+\vspace{-0.45cm}
+
 \section{$\mu$GP}
-The evolutionary core used in this experience is $\mu$GP (or MicroGP) \cite{Squillero2005}, a generic open-source evolutionary tool hosted on SourceForge\footnote{\url{http://ugp3.sourceforge.net/}}. As individuals in this framework are internally encoded as directed multi-graphs, $\mu$GP technically belongs to the family of Linear Genetic Programming \cite{}. The software is chosen for several desirable features: self-adapting parameters; customizable structure of the individual genome, specified by an XML file; design that makes it possible to use parallel, external fitness evaluation.
+
+The evolutionary core used in this experience is $\mu$GP (or MicroGP) \cite{Squillero2005}, a generic open-source evolutionary tool hosted on SourceForge\footnote{\url{http://ugp3.sourceforge.net/}}. As individuals in this framework are internally encoded as directed multi-graphs, $\mu$GP technically belongs to the family of Linear Genetic Programming. The software is chosen for several desirable features: self-adapting parameters; customizable structure of the individual genome, specified by an XML file; design that makes it possible to use parallel, external fitness evaluation.
 
 Thanks to the user-customizable and richly expressive structure of the genome, $\mu$GP is successfully used in different applications concerning automatic code generation, ranging from the design of AIs in the game \emph{Core Wars}\footnote{For more information, see \url{http://www.corewars.org/}} \cite{Corno2005}, to the generation of Assembly-language code for processor's stress tests \cite{Corno2003}, %from the evolution of configurations in wireless sensor networks \cite{Bucur2014}, 
 to the generation of C++ classes for AIs in StarCraft \cite{Garcia2015}.
 
 \section{Proposed Approach}
+
 The approach used in the competition relies upon exploiting $\mu$GP to directly write valid Java classes for the controller, modifying the code with a script to take into account some possible issues, compiling the generated class in the provided framework, and finally executing the resulting \texttt{jar} to obtain the fitness values.
 
+
+
 \subsection{Genome structure}
-In previous applications of $\mu$GP, the presence of \emph{jump}-like structures in the target language (such as \texttt{goto}s in C/C++ and \texttt{jmp} in Assembly) proved to be particularly beneficial to the evolutionary algorithm. In Java, by design, there is no such structure: in order to obtain a similar behavior, the main part of the genome describes a \texttt{for} loop that contains a \texttt{switch...case} statement, with a non-fixed number of \texttt{case}s. The variable that drives the loop is also used in the \texttt{switch}, and its value can be changed by the statements themselves. This rather complex structure factually behaves like a series of \texttt{goto}s, leaving the evolutionary algorithm free to branch over multiple conditions. An example of the generated code is reported in Figure \ref{fig:codeblock}.
 
-\begin{figure}
-\begin{lstlisting} 
-Put your code here.
-Put your code here. 
-Put your code here. 
-Put your code here. 
-Put your code here. 
-Put your code here. 
-Put your code here. 
-Put your code here. 
-Put your code here. 
-Put your code here.  
-\end{lstlisting}
-\caption{Example of a generated controller.}
-\label{fig:codeblock}
-\end{figure}
+In previous applications of $\mu$GP, the presence of \emph{jump}-like structures in the target language (such as \texttt{goto}s in C/C++ and \texttt{jmp} in Assembly) proved to be particularly beneficial to the evolutionary algorithm. In Java, by design, there is no such structure: in order to obtain a similar behavior, the main part of the genome describes a \texttt{for} loop that contains a \texttt{switch...case} statement, with a non-fixed number of \texttt{case}s. The variable that drives the loop is also used in the \texttt{switch}, and its value can be changed by the statements themselves. This rather complex structure factually behaves like a series of \texttt{goto}s, leaving the evolutionary algorithm free to branch over multiple conditions. An example of the generated code is reported on [link].
 
-\subsection{Fitness function}
+
+
+A generated individual consists of a fixed block code  called "prologue", followed by a generated series of macros, where each macro is a \texttt{case} in the \texttt{switch}. Those macros are the bases of the program's genome. A macro is an \texttt{if-else} statement, where the condition and the different possible results are evolved. The condition is a boolean function chosen by $\mu$GP among predefined functions. $\mu$GP also evolves the parameters used in this function (value of a specific tile, arbitrary possible tile's value,...). The possible results of this \texttt{if-else} statement are: adding an evolved value to a score attributed to every possible action, make a jump to another \texttt{case}, or return the best action according to the score.
+Finally another fixed block of code, called "epilogue" is put at the end of the generated individual.
+
+
+
+\subsection{Fitness Function}
+Two ideas sprang to mind: using just the mean score itself, and using the percentages of games in which the controller achieved a given tile in a vector's form. After some deliberation, we decided to test many different configurations, and ended up concluding that the fitness function that seemed to generate the best individuals was one that took just the mean score.
+
+It is our belief, based on bibliographical research, that a fitness function that also took the mean number of empty tiles per move into consideration would be more suitable, but since that information was not given us by the simulator, we thought it best not to modify it for that purpose.
+
+
 
 \section{Experimental results}
 The experiments are run until a stagnation condition is reached. The settings for $\mu$GP are reported in Table \ref{table:settings}.
@@ -55,30 +75,42 @@ The experiments are run until a stagnation condition is reached. The settings fo
 \centering
 \caption{Parameter settings used in the experiments.}
 \label{table:settings}
-\begin{tabular}{|l|p{7cm}|p{2cm}|}
+{\scriptsize
+\begin{tabular}{|l|p{4.3cm}|p{1cm}|}
 \hline
 {\bf Parameter}  & {\bf Meaning} 			& {\bf Value}\\ \hline
-$\mu$            & Population size         & 50                                 \\ \hline
-$\lambda$        & Number of genetic operators applied at each generation         & 50                                 \\ \hline
+$\mu$            & Population size         & 80                                 \\ \hline
+$\lambda$        & Number of genetic operators applied
+ at each generation         & 64                                 \\ \hline
 $\sigma$         & Strength of genetic operators         & 0.9                                \\ \hline
 $\alpha$ & Inertia of the self-adapting engine       & 0.9                                \\ \hline
-SSC & Maximum number of generations without improvements of the best fitness value, after which the algorithm will stop & 50 \\ \hline
+SSC & Maximum number of generations
+ without improvements of the  
+ best fitness value, after which 
+  the algorithm will stop & 50 \\ \hline
 \end{tabular}
+}
+
 \end{table}
 
 In $\mu$GP, every time a mutation is applied on an individual, it is executed again, unless a randomly generated number in $(0,1)$ is higher than the current value of $\sigma$: this parameter is self-adapted during the evolution, trying to find a good balance between exploration (many mutations) and exploitation (few mutations). Self-adapting of parameters is regulated by $\alpha$, following the formula:
+
+
 
 \begin{equation}
 \texttt{new\_value} = \alpha \cdot \texttt{old\_value} + (1 - \alpha) \cdot \texttt{target\_value}
 \end{equation}
 
-The activation probability of the 
+The activation probability of the genetic operator is self-adapted. 
 
-\section{Conclusions}
+After 19h of computation using 16 cores of  Intel(R) Xeon(R) CPU E7-4830, We obtained a mean score of 5599.8
 
+
+{\scriptsize
 \bibliographystyle{plain}
-\bibliography{team-treecko-2048}
 
+\bibliography{team-treecko-2048}
+}
 
 
 \end{document}
